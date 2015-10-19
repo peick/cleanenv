@@ -33,15 +33,10 @@ setup(name='cleanenv',
       install_requires=[
           'argparse>=1.2.1',
           'configobj>=4.7.2',
-          #'virtualenv>=1.4.9',
-          #'virtualenv>=1.7.1.2',
-          'virtualenv>=1.6.3',
+          'virtualenv>=1.9.1',
       ] + packages,
       setup_requires=[
-          #'pip>=1.5.6',
-          #'setuptools>=0.9.8'
           'pip>=0.7.2',
-          #'setuptools>=0.6.24'
           'setuptools>=0.6.14'
       ],
       entry_points={
