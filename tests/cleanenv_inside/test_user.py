@@ -28,7 +28,9 @@ def test_username_from_config(value, expect):
 groups = [
     {'name': 'gx', 'gid': 100},
     {'name': 'g2', 'gid': 102},
-    {'name': 'g3', 'gid': 103}]
+    {'name': '.g-___3', 'gid': 103, 'comment': '.g-$ +3'},
+    {'name': 'veryveryveryveryveryverylongname',
+        'gid': 104, 'comment': 'veryveryveryveryveryverylongname_thisnot'}]
 
 @pytest.mark.parametrize('value, expect', [
     ('4444:',
@@ -64,10 +66,45 @@ def test_expand_user(value, expect):
         .and_return([
             grp.struct_group(['g1', 'x', 101, []]),
             grp.struct_group(['g2', 'x', 102, ['tester']]),
-            grp.struct_group(['g3', 'x', 103, ['net+tester']]),
+            grp.struct_group(['.g-$ +3', 'x', 103, ['net+tester']]),
+            grp.struct_group(['veryveryveryveryveryverylongname_thisnot',
+                'x', 104, ['tester']]),
         ])
 
     result = expand_user({'global': {'user': value}})
+    assert result == expect
+
+
+def test_expand_user_non_posix():
+    longname  = 'This+is-not@a-posix-username.It-is-also-very-long'
+    shortname = longname[:32]
+    posixname = 'This_is-not_a-posix-username.It-'
+
+    struct = pwd.struct_passwd(
+        [longname, 'x', 1234, 1000, 'Test User', '/home/tester', '/bin/sh'])
+    flexmock(pwd) \
+        .should_receive('getpwnam') \
+        .and_return(struct)
+    flexmock(grp) \
+        .should_receive('getgrnam') \
+        .and_return(grp.struct_group(['gx', 'x', 100, []]))
+    flexmock(grp) \
+        .should_receive('getgrall') \
+        .and_return([
+            grp.struct_group(['g1', 'x', 101, [longname]]),
+            grp.struct_group(['g2', 'x', 102, [shortname]]),
+            grp.struct_group(['g3', 'x', 103, [posixname]]),
+        ])
+
+    result = expand_user({'global': {'user': '1234:' + longname}})
+    expect = dict(
+        name=posixname,
+        uid=1234,
+        system=False,
+        sudo=False,
+        comment=longname,
+        groups=[{'name': 'gx', 'gid': 100},
+                {'name': 'g1', 'gid': 101}])
     assert result == expect
 
 

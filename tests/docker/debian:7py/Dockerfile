@@ -9,6 +9,5 @@ RUN apt-get update && \
         python-dev \
         python-pip \
         python-setuptools \
-        python-virtualenv \
         sudo && \
     apt-get autoclean
