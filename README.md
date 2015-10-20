@@ -54,6 +54,8 @@ the container after start up.
 
     $ cleanenv create --on-activate <program> --on-deactivate <program2> <path>
 
+    (not implemented yet, sorry)
+
 If you plan to use programs inside the environment without entering it, you
 should use the --persistent directive. This keeps your container running even
 when your programs exits.
@@ -89,7 +91,17 @@ Configuration file
 If you have a complex configuration or you need a reproducable configuration
 you can put all above mentioned settings into a .cleanenv.conf file.
 When executing `cleanenv create <path>` it searches this file in the current
-run path. Alternatively you can provide a configuration file with --config
+working directory. Alternatively you can provide a configuration file with
+`--config`
+
+
+Reset the state of an environment
+=================================
+
+To cleanup the environment and reuse it without fully destroying the environment
+you can use the `cleanenv reset` command.
+
+Internally it stops and removes the docker container.
 
 
 Proper destroying of an environment
@@ -98,14 +110,14 @@ Proper destroying of an environment
 Cleanenv manages a set of docker images (snapshots), which needs to be removed
 when you don't need the environment anymore. To remove them just type:
 
-    $ destroy
+    $ cleanenv destroy
 
 inside the activated environment or directly:
 
     $ <path>/bin/destroy
 
 
-Using snapshots
+Using snapshots (not implemented yet, sorry)
 ===============
 
 Snapshots are used to store the current state of the docker container for
