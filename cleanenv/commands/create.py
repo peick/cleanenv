@@ -94,11 +94,7 @@ def _destroy(home_dir):
         print("%s does not exists. Aborting." % executable, file=sys.stderr)
         sys.exit(1)
 
-    cmd = [
-        executable,
-        'destroy',
-        '-q',
-        '--hard']
+    cmd = [executable, 'destroy']
 
     subprocess.check_call(cmd)
 

@@ -12,7 +12,8 @@ def test_get_plugin():
 
 def test_run_command(tmpdir):
     home_dir = tmpdir.strpath
-    options = flexmock(environment_path=home_dir)
+    options = flexmock(environment_path=home_dir,
+        config_file=tmpdir.join('config').strpath)
     flexmock(reset).should_receive('run_command').once()
     flexmock(shutil).should_receive('rmtree').with_args(home_dir)
 
