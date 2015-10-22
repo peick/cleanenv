@@ -1,1 +1,3 @@
 recursive-include cleanenv/distribution *
+recursive-include tests *
+include LICENSE README.md tox.ini
